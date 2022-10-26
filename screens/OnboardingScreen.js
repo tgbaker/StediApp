@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
+import { TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-navigation';
 
 const Dots = ({selected})=> {
@@ -44,7 +45,12 @@ const OnboardingScreen = ({setFirstLaunch}) =>{
               backgroundColor: '#fff',
               image: <Image   style={{height: '60%', width: '90%', resizeMode:'contain', marginBottom:-200}} source={require('../image/testing.png')} />,
               title: <Text style={{fontWeight:'bold', textAlign:'center', color:'#A0CE4E', fontSize:19, margin:12,  marginTop: -70}}>Welcome to STEDI  Balance</Text>,
-              subtitle: 'STEDI Balance will now send a text with a code',
+              subtitle: ( 
+                <View>
+                    <Text style={{fontWeight:'bold', textAlign:'center', color:'#A0CE4E', fontSize:19, margin:12,  marginTop: -70}}>Welcome to STEDI  Balance</Text>
+
+                </View>
+              ),
             },
             {
                 backgroundColor: '#fff',
