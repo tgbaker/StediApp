@@ -1,11 +1,12 @@
 import React, { useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button, Alert } from 'react-native';
 import  Navigation from './components/Navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from './screens/OnboardingScreen';
 import Home from './screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -15,16 +16,31 @@ const AppStack = createNativeStackNavigator();
 const App = () =>{
   const [isFirstLaunch, setFirstLaunch] = React.useState(true);
   const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false); // edit in this line
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false); 
   const [homeTodayScore, setHomeTodayScore] = React.useState(0);
   const [tempCode, setTempCode] = React.useState(null);
+
+  useEffect(() => {
+  const getSessionToken = async() => {
+    const sessionToken = await AsyncStorage.getItem('sessionToken');
+    console.log('token from storage', sessionToken);
+    const validateRespose = await fetch('https://dev.stedi.me/validate/' + sessionToken);
+
+    if(validateRespose.status == 200){
+      const userEmail = await validateRespose.text();
+      console.log('userEmail', userEmail);
+      setIsLoggedIn(true);
+    }
+    }
+    getSessionToken();
+  },[])
 
    if (isFirstLaunch == true){
 return(
   <OnboardingScreen setFirstLaunch={setFirstLaunch}/>
  
 );
-  }else if(isLoggedIn){ //start here
+  }else if(isLoggedIn){ 
     return <Navigation/>
   } else { 
     return (
@@ -54,7 +70,7 @@ return(
 
           }}
           />
-{/* ADDED ME */}
+
 <TextInput 
         value={tempCode}
         onChangeText={setTempCode}
@@ -85,7 +101,8 @@ return(
 
             if(loginResponse.status == 200){
               const sessionToken = await loginResponse.text();
-              console.log('Session Token', sessionToken)
+              await AsyncStorage.setItem('sessionToken', sessionToken);
+              console.log('Session Token', sessionToken);
               setIsLoggedIn(true);
             }
             else{
@@ -95,7 +112,7 @@ return(
           />
       </View>
     )
-  } //and edit here
+  } 
 }
  export default App;
 
