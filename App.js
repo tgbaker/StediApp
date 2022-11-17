@@ -36,7 +36,7 @@ const App = () =>{
     getSessionToken();
   },[])
 
-   if (isFirstLaunch == true){
+   if (isFirstLaunch == true &&! isLoggedIn){
 return(
   <OnboardingScreen setFirstLaunch={setFirstLaunch}/>
  
